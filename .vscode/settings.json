@@ -1,0 +1,6 @@
+{
+  "cmake.sourceDirectory": "/home/ildar/s21/3DViewer/qt_version",
+  "files.associations": {
+    "qmainwindow": "cpp"
+  }
+}

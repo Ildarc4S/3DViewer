@@ -1,0 +1,19 @@
+services:
+  opengl-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: opengl-dev
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - QT_QPA_PLATFORM=xcb
+      - LANG=C.UTF-8
+      - LC_ALL=C.UTF-8
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/dri:/dev/dri
+      - ./:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
