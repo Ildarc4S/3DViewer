@@ -1,4 +1,4 @@
-APP_NAME ?= HelloWorld
+APP_NAME ?= 3DViewer
 
 DOCKER_COMPOSE = docker compose
 DOCKER_EXEC = $(DOCKER_COMPOSE) exec opengl-app
