@@ -12,8 +12,7 @@ services:
       - LC_ALL=C.UTF-8
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /dev/dri:/dev/dri
-      - ./:/app
-    working_dir: /app
+      - ./:/project
+    working_dir: /project
     stdin_open: true
     tty: true
