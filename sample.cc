@@ -3,6 +3,8 @@
 #include <include/gl.h>
 #include <GLFW/glfw3.h>
 
+#include "shaders.h"
+
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
@@ -34,65 +36,7 @@ int main() {
     return -1;
   }
 
-  const char* vertex_shader_source = R"(
-    #version 450 core
-    layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec3 aColor;
-
-    out vec3 ourColor;
-
-    void main() {
-      gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-      ourColor = aColor;
-    }
-  )";
-
-  const char* fragment_shader_source = R"(
-    #version 450 core
-    out vec4 FragColor;
-    in vec3 ourColor;
-
-    void main() {
-      FragColor = vec4(ourColor, 1.0f);
-    }
-  )";
-
-  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-  glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
-  glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
-  glCompileShader(vertex_shader);
-  glCompileShader(fragment_shader);
-
-  int success;
-  char info_log[512];
-  glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-
-  if(!success) {
-    glGetShaderInfoLog(vertex_shader, sizeof(info_log), NULL, info_log);
-    std::cout << "ERROR COMPIILE: " << info_log << std::endl;
-  }
-
-  glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-  if(!success) {
-    glGetShaderInfoLog(fragment_shader, sizeof(info_log), NULL, info_log);
-    std::cout << "ERROR COMPIILE: " << info_log << std::endl;
-  }
-
-  GLuint shader_program = glCreateProgram();
-  glAttachShader(shader_program, vertex_shader);
-  glAttachShader(shader_program, fragment_shader);
-  glLinkProgram(shader_program);
-
-  glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-  if(!success) {
-    glGetProgramInfoLog(shader_program, sizeof(info_log), NULL, info_log);
-    std::cout << "ERROR LINK: " << info_log << std::endl;
-  }
-
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
+  Shader our_shader("./shader.vs", "./shader.fs");
 
   float vertices[] = {
     -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -124,7 +68,7 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shader_program);
+    our_shader.Use();
     glBindVertexArray(VAO);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
