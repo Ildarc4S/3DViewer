@@ -4,6 +4,10 @@
 #include <GLFW/glfw3.h>
 #include "stb_image.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include "shaders.h"
 
 
@@ -38,7 +42,7 @@ int main() {
     return -1;
   }
 
-  Shader our_shader("./texture_shader.vs", "./texture_shader.fs");
+  Shader our_shader("./transform_shader.vs", "./transform_shader.fs");
 
   float vertices[] = {
      0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
@@ -132,7 +136,15 @@ int main() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
+    // Трансформация объекта
+    glm::mat4 trans(1.0f);
+    trans = glm::translate(trans, glm::vec3(0.5f, 0.5f, 0.0f));
+    trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
     our_shader.Use();
+    GLuint trans_local = glGetUniformLocation(our_shader.ID, "transform");
+    glUniformMatrix4fv(trans_local, 1, GL_FALSE, glm::value_ptr(trans));
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
