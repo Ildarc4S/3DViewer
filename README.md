@@ -1,6 +1,6 @@
 # Компиляция
 ```bash
-g++ sample.cc glad/gl.c -Iglad -lglfw -lGL
+g++ sample.cc stb_image.c glad/gl.c -Iglad -lglfw -lGL
 ```
 
 # Запуск
